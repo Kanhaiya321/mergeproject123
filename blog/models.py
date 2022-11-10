@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
 
 class Post(models.Model):
@@ -16,3 +17,12 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title   
+    
+class User(AbstractUser):
+    mobileNumber = models.IntegerField(null=True,blank=True)
+    cityname = models.CharField(max_length=100,null=True,blank=True)
+    statename = models.CharField(max_length=100,null=True,blank=True)
+    # counteryname = models.CharField(max_length=150,null=True,blank=True)
+
+    def __str__(self):
+        return self.username
