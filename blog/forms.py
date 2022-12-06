@@ -12,19 +12,6 @@ class PostForm(forms.ModelForm):
         fields = ('title', 'text',)
         
 
-class CustomUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=False, help_text='Optional')
-    last_name = forms.CharField(max_length=30, required=False, help_text='Optional')
-    email = forms.EmailField(max_length=254, help_text='Enter a valid email address')
-    class Meta:
-        model = User
-        fields = ("username", "email")
-
-class CustomUserChangeForm(UserChangeForm):
-
-    class Meta:
-        model = User
-        fields = ("username", "email")
 
 class SignUpForm(UserCreationForm):
     
@@ -37,5 +24,9 @@ class SignUpForm(UserCreationForm):
             'email', 
             'password1', 
             'password2', 
-            ]
+            ]    
+        
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=63)
+    password = forms.CharField(max_length=63, widget=forms.PasswordInput)
         

@@ -2,11 +2,12 @@ from django.shortcuts import render,redirect
 from django.utils import timezone
 from .models import Post,AbstractUser
 from django.shortcuts import render, get_object_or_404
-from .forms import PostForm,CustomUserCreationForm
+from .forms import PostForm,SignUpForm, LoginForm
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login , logout
 from . import forms
-from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import login as auth_login
+from django.contrib.auth.decorators import login_required
 
 
 def post_list(request):
@@ -25,7 +26,7 @@ def post_new(request):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
-            return redirect('post_detail', post.pk)
+            return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
@@ -48,15 +49,39 @@ def post_edit(request, pk):
 
 def signup(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            print(user, "Userrr")
+            user = form.save()
             login(request, user)
             return redirect('post_list')
     else:
-        form = CustomUserCreationForm()
+        form = SignUpForm()
     return render(request, 'blog/signup.html', {'form': form})
+
+
+def login_view(request):
+    form = forms.LoginForm()
+    message = ''
+    if request.method == 'POST':
+        form = forms.LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password'],
+            )
+            if user is not None:
+                login(request, user)
+                message = f'Hello {user.username}! You have been logged in'
+                return redirect('post_list')
+            else:
+                form = forms.LoginForm()
+                message = 'Login failed!'
+    return render(request, 'blog/login.html', {'form': form, 'message': message})
+
+@login_required
+def profile(request):
+    return render(request, 'blog/profile.html')
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
