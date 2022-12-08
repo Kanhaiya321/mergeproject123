@@ -19,7 +19,7 @@
             <h1><a href="/">Django Girls Blog</a></h1>
             <h1><a href="/polls">Polls</a></h1>
             {% if user.is_authenticated%}
-            <li> Hello, {{ request.user.first_name }} </li>
+            <li> Hello, {{ request.user.first_name }} {{ request.user.last_name }}</li>
             <li><p>You are login as {{ request.user }}</p><a href="{% url 'logout' %}">Logout</a></li>
             {% else %}
             <h1><a href="{% url 'login' %}">Log_IN></h1>

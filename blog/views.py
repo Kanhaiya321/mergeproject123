@@ -32,7 +32,6 @@ def post_new(request):
     return render(request, 'blog/post_edit.html', {'form': form})
 
 def post_edit(request, pk):
-    
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
@@ -41,11 +40,10 @@ def post_edit(request, pk):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
-            return redirect('post_detail', post.pk)
+            return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
-
 
 def signup(request):
     if request.method == 'POST':
@@ -85,3 +83,18 @@ def profile(request):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+def update_profile(request):
+    args = {}
+
+    if request.method == 'POST':
+        form = update_profile(request.POST)
+        form.actual_user = request.user
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('update_profile_success'))
+    else:
+        form = update_profile()
+
+    args['form'] = form
+    return render(request, 'registration/update_profile.html', args)
