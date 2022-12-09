@@ -3,6 +3,14 @@
 {% block title %} You are Logged IN ! {% endblock title %}
 
 {% block content %} 
+
+<article>
+  <aside class="actions">
+      <a class="btn btn-secondary" href="{% url 'profile_edit' %}">
+        {% include './icons/pencil-fill.svg' %}
+      </a>
+  </aside>
+</article>
 <div class="row my-3 p-3">
   <h1>This is the profile page for {{user.username}}</h1>
   <h1>Email :{{user.email}}</h1>
@@ -12,5 +20,6 @@
   <h1>City :{{user.cityname}}</h1>
   <h1>State :{{user.statename}}</h1>
 </div>
-
 {% endblock content %}
+
+

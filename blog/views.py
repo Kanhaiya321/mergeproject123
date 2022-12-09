@@ -2,12 +2,15 @@ from django.shortcuts import render,redirect
 from django.utils import timezone
 from .models import Post,AbstractUser
 from django.shortcuts import render, get_object_or_404
-from .forms import PostForm,SignUpForm, LoginForm
+from .forms import PostForm,SignUpForm, LoginForm, UpdateUserForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login , logout
 from . import forms
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .forms import UpdateUserForm
+
 
 
 def post_list(request):
@@ -84,17 +87,17 @@ def logout_user(request):
     logout(request)
     return redirect('login')
 
-def update_profile(request):
-    args = {}
-
+@login_required
+def profile_edit(request):
+    print(request.method, "dddddddddddddddddddddddddddddddddddddd")
     if request.method == 'POST':
-        form = update_profile(request.POST)
-        form.actual_user = request.user
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('update_profile_success'))
-    else:
-        form = update_profile()
+        print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        user_form = UpdateUserForm(request.POST, instance=request.user)
 
-    args['form'] = form
-    return render(request, 'registration/update_profile.html', args)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect(to='profile')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+    return render(request, 'blog/profile_edit.html', {'user_form': user_form})
