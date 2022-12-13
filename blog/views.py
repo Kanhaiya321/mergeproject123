@@ -89,9 +89,7 @@ def logout_user(request):
 
 @login_required
 def profile_edit(request):
-    print(request.method, "dddddddddddddddddddddddddddddddddddddd")
     if request.method == 'POST':
-        print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         user_form = UpdateUserForm(request.POST, instance=request.user)
 
         if user_form.is_valid():

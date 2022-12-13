@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Post
 from django.contrib.auth.admin import UserAdmin
 from .models import User
+from .models import Category
 
 admin.site.register(Post)
 
@@ -12,3 +13,4 @@ admin.site.register(Post)
 #     list_display = ["email", "username",]
 
 admin.site.register(User)
+admin.site.register(Category)
