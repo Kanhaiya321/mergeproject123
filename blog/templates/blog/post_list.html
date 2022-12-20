@@ -9,7 +9,7 @@
             </time>
             <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2> 
             <p>{{ post.text|linebreaksbr }}</p>
-            <p>{{post.category}}</p>
+            <p>Section : {{post.category}}</p>
         </article>
     {% endfor %}
 {% endblock %}
